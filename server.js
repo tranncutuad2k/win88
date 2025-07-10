@@ -16,7 +16,7 @@ app.use(cors({
     origin: '*',
     optionsSuccessStatus: 200
 }));
-let port       = process.env.PORT || 3000;
+// let port       = process.env.PORT || 80;
 let expressWs  = require('express-ws')(app);
 let bodyParser = require('body-parser');
 var morgan = require('morgan');
@@ -51,11 +51,19 @@ require('./app/Cron/taixiu')(redT);   // Chạy game Tài Xỉu
 require('./app/Cron/baucua')(redT);   // Chạy game Bầu Cua
 require('./config/cron')();
 require('./app/Telegram/Telegram')(redT); // Telegram Bot
+// app.listen(port, function() {
+    // console.log("Server listen on port ", port);
+// });
+const port = process.env.PORT || 8080;
+app.set("port", port);
 
-app.get('/', (req, res) => {
-  res.send('Server is alive!');
-});
+/**
+ * Create HTTP server.
+ */
+const server = http.createServer(app);
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+server.listen(port, () => console.log(`API running on localhost:${port}`));
 
-app.listen(port, function() {
-    console.log("Server listen on port ", port);
-});
+module.exports = app;
